@@ -1,30 +1,4 @@
 # SQL_queries 
-### Emails Sent by Month
-
-select distinct sent_date2 as sent_month,   
-id_account,  
-COUNT(DISTINCT id_message) OVER (PARTITION BY id_account, sent_date2) / COUNT(DISTINCT id_message) OVER (partition by sent_date2)*100 as sent_msg_percent,  
-first_sent_date,  
-last_sent_date  
-from (  
-SELECT  
-  date(EXTRACT (year FROM sent_date), EXTRACT (month FROM sent_date), 1) as sent_date2,  
-  id_account, id_message, sent_date,  
-  min(sent_date) over(partition by id_account, date(EXTRACT (year FROM sent_date), EXTRACT (month FROM sent_date), 1) ) as first_sent_date,  
-  max(sent_date) over(partition by id_account, date(EXTRACT (year FROM sent_date), EXTRACT (month FROM sent_date), 1)) as last_sent_date  
-  
-
-
-FROM  
-  (
-    SELECT es.id_account,es.id_message, date_add(s.date, INTERVAL es.sent_date DAY) AS sent_date,  
-    FROM `data-analytics-mate.DA.email_sent` es  
-    JOIN `data-analytics-mate.DA.account_session` acs  
-      ON es.id_account = acs.account_id  
-    JOIN `data-analytics-mate.DA.session` s  
-      ON acs.ga_session_id = s.ga_session_id  
-  )  
-)
 
 
 
